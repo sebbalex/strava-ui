@@ -75,7 +75,7 @@ my.getFromStrava = function getFromStrava(callback) {
 
     Promise.all(promises)
         .then(function (data) {
-            console.log(athletes);
+            // console.log(athletes);
             fs.writeFile("/tmp/strava_data.json", JSON.stringify(athletes), function (err) {
                 if (err) {
                     return console.log(err);
@@ -94,7 +94,7 @@ my.getFromStrava = function getFromStrava(callback) {
 my.readFromCache = function readFromCache(callback) {
     fs.readFile("/tmp/strava_data.json", function (err, data) {
         if (err) throw err;
-        console.log(JSON.parse(data))
+        // console.log(JSON.parse(data))
         callback(JSON.parse(data));
     });
 }
