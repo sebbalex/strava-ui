@@ -1,26 +1,28 @@
+# README #
+A simple project which involve our MTB group to get
+some statistics and make them funny with some widgets
+on web
 
-#Dependencies
+##Dependencies
 https://www.npmjs.com/package/strava-v3
 
-#Features
+##Features
+* 1  total ascend
+* 2  personal info
+* 3  last activity
+* 4  KOM list
 
-#Major:
-1  total ascend
-2  personal info
-3  last activity
-4  KOM list
-
-#Minor:
+####TODO
 
 
 
-#Bugs
+##Bugs
 
-#Major
-
-
-#Minor
+####Major
 
 
+####Minor
 
-#Fixed
+
+
+##Fixed
