@@ -167,13 +167,24 @@ function widgetCreate(data) {
 
 
 function rewardsDraw(data, standings) {
-    var name = standings.name;
+    var name1st = standings[0].name;
+    var name2nd = standings[1].name;
+    var name3rd = standings[2].name;
+
+    var max1st = standings[0].max;
+    var max2nd = standings[1].max;
+    var max3rd = standings[2].max;
+
+    var var1st = name1st + ' ' + max1st + ' ' + data.unit;
+    var var2nd = name2nd + ' ' + max2nd + ' ' + data.unit;
+    var var3rd = name3rd + ' ' + max3rd + ' ' + data.unit;
+
     var standing = data.name;
     var icon = data.icon;
     var text =
         '                            <div class="col-sm-3 ">' +
         '                                <div class="row">' +
-        '                                   <div class="height-auto width-50">' +
+        '                                   <div class="height-auto width-70">' +
         '                                   <h4 style="text-align: center">' + icon + '&nbsp;' + standing + '</h4>' +
         '                                   </div>' +
         '                                </div>' +
@@ -185,7 +196,7 @@ function rewardsDraw(data, standings) {
         '                                    </div>' +
         '                                   <div class="infobox">' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h3 style="margin-top: 10px">' + name + ' '+standings.max +'</h3></div>' +
+        '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var1st + '</h4></div>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
@@ -197,7 +208,7 @@ function rewardsDraw(data, standings) {
         '                                    </div>' +
         '                                   <div class="infobox ">' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h3 style="margin-top: 10px">' + name + '</h3></div>' +
+        '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var2nd + '</h4></div>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
@@ -209,7 +220,7 @@ function rewardsDraw(data, standings) {
         '                                    </div>' +
         '                                   <div class="infobox">' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h3 style="margin-top: 10px">' + name + '</h3></div>' +
+        '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var3rd + '</h4></div>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
@@ -261,19 +272,33 @@ function rewardsCalculator(data) {
             name: 'KOM',
             type: 'uphill',
             field: 'stats.ytd_ride_totals.elevation_gain',
+            math: new Function('a', 'return a'),
+            unit: 'm',
             icon: '<i class="red bigger-150 fa fa-mountain"></i>'
         },
         {
             name: 'Best assente',
             type: 'outhome',
             field: 'stats.ytd_ride_totals.elapsed_time',
+            math: new Function('a', 'return a/60/60/24'),
+            unit: 'days',
             icon: '<i class="orange bigger-150 fa fa-sign-out-alt"></i>'
         },
         {
             name: 'Best km',
             type: 'distance',
             field: 'stats.ytd_ride_totals.distance',
+            math: new Function('a', 'return a/1000'),
+            unit: 'Km',
             icon: '<i class="blue bigger-150 fa fa-tachometer-alt"></i>'
+        },
+        {
+            name: 'Best sempre in giro',
+            type: 'counter',
+            field: 'stats.ytd_ride_totals.count',
+            math: new Function('a', 'return a'),
+            unit: '',
+            icon: '<i class="pink bigger-150 fa fa-road"></i>'
         }
     ]
     var rewards = $('#rewardsContent').html();
@@ -284,7 +309,6 @@ function rewardsCalculator(data) {
             rewards += '<div class="row">'
 
         rewards += rewardsDraw(chart[key], standings(data, chart[key]));
-
 
 
         i++;
@@ -302,17 +326,31 @@ function getDescendantProp(obj, desc) {
 }
 
 function standings(data, chart) {
-    var max = 0;
-    var name = '';
-    for (var key in data) {
-        var app = getDescendantProp(data[key], chart.field);
-        name = (app>max) ? data[key].personal.firstname : name;
-        max = (app>max) ? app : max;
 
+    var rank = 1;
+    var result = [];
+    var names = [];
+    while (rank < 4) {
+        var max = 0;
+        var name = '';
 
-        console.log(name)
+        for (var key in data) {
+            var app = getDescendantProp(data[key], chart.field);
+
+            //skip if already in rank
+            if (names.includes(data[key].personal.firstname))
+                continue;
+
+            name = (app > max) ? data[key].personal.firstname : name;
+            max = (app > max) ? app : max;
+
+            // console.log(rank, name, max, chart.name);
+        }
+        names.push(name);
+        result.push({rank: rank, name: name, max: chart.math(max).toFixed(0)});
+        rank++;
     }
-    return {name: name, max: max};
+    return result;
 }
 
 function successLoading(data) {
