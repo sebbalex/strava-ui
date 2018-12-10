@@ -10,4 +10,11 @@ router.get('/', function (req, res, next) {
 
 });
 
+router.get('/stats', function (req, res, next) {
+    model.readStats(function (data) {
+        res.send(JSON.stringify(data));
+    })
+
+});
+
 module.exports = router;

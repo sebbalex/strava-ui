@@ -12,6 +12,10 @@ var athletes = {
 };
 var promises = [];
 var my = {};
+var fileData = "/tmp/strava_data.json";
+var fileStats = "/tmp/strava_update.json";
+var intervalUpdate = 6*60*60*1000; //six hours in ms
+// intervalUpdate = 10000; //test
 
 function getData(err, payload, limits, ath, nestObj, resolve, reject) {
     if (!err) {
@@ -76,23 +80,35 @@ my.getFromStrava = function getFromStrava(callback) {
     Promise.all(promises)
         .then(function (data) {
             // console.log(athletes);
-            fs.writeFile("/tmp/strava_data.json", JSON.stringify(athletes), function (err) {
+            fs.writeFile(fileData, JSON.stringify(athletes), function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
-                console.log("The file was saved!");
+                console.log("The data file was saved!");
             });
         })
         .then(function (data) {
+            //TODO check if data are consistent - Object.keys(data).length;
             callback(athletes);
         })
         .catch(function (err) {
+            //TODO should try again later?
             console.log(err)
         });
 }
+
+
 my.readFromCache = function readFromCache(callback) {
-    fs.readFile("/tmp/strava_data.json", function (err, data) {
+    fs.readFile(fileData, function (err, data) {
+        if (err) throw err;
+        // console.log(JSON.parse(data))
+        callback(JSON.parse(data));
+    });
+}
+
+my.readStats = function readFromCache(callback) {
+    fs.readFile(fileStats, function (err, data) {
         if (err) throw err;
         // console.log(JSON.parse(data))
         callback(JSON.parse(data));
@@ -105,5 +121,20 @@ my.run = function run(callback) {
     //get anytime
     // my.getFromStrava(callback);
 }
+
+//refreshing stats cache
+setInterval(function () {
+    my.getFromStrava(function (data) {
+        var size = Object.keys(data).length;
+        var obj = {size: size, time: new Date()};
+        console.log('refreshing stats...', size);
+        fs.writeFile(fileStats, JSON.stringify(obj), function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("The stats file was saved!");
+        });
+    })
+}, intervalUpdate);
 
 module.exports = my;
