@@ -11,7 +11,11 @@ function widgetCreate(data) {
     var uphill = data.stats.ytd_ride_totals.elevation_gain;
     var timespent = (data.stats.ytd_ride_totals.elapsed_time / 60 / 60 / 24).toFixed(0);
     var clubs = data.personal.clubs.length;
-    var actvitiesKMS = elaborateActivities(data.activities).slice(-10).join(',');
+    var actvitiesKMSArr = elaborateActivities(data.activities).slice(-10);
+    var actvitiesKMS = actvitiesKMSArr.join(',');
+    var kmPerc = ((actvitiesKMSArr[actvitiesKMSArr.length - 1] / actvitiesKMSArr[actvitiesKMSArr.length - 2]) * 100 - 100).toFixed(2);
+    var kmPercArrow = (kmPerc > 0) ? 'fa-arrow-up' : 'fa-arrow-down';
+    var kmPercColor = (kmPerc > 0) ? 'success' : 'danger';
 
     var text =
         '                            <div class="col-sm-4 ">' +
@@ -74,7 +78,7 @@ function widgetCreate(data) {
         '                                <div class="infobox infobox-orange2">' +
         '                                    <!-- #section:pages/dashboard.infobox.sparkline -->' +
         '                                    <div class="infobox-chart">' +
-        '                                        <span class="sparkline" data-values="'+actvitiesKMS+'"></span>' +
+        '                                        <span class="sparkline" data-values="' + actvitiesKMS + '"></span>' +
         '                                    </div>' +
         '' +
         '                                    <!-- /section:pages/dashboard.infobox.sparkline -->' +
@@ -83,9 +87,9 @@ function widgetCreate(data) {
         '                                        <div class="infobox-content">KM ultime uscite</div>' +
         '                                    </div>' +
         '' +
-        '                                    <div class="badge badge-success">' +
-        '                                        7.2%' +
-        '                                        <i class="ace-icon fa fa-arrow-up"></i>' +
+        '                                    <div class="badge badge-' + kmPercColor + '">' +
+        '                                        ' + kmPerc + '%' +
+        '                                        <i class="ace-icon fa ' + kmPercArrow + '"></i>' +
         '                                    </div>' +
         '                                </div>' +
         '' +
@@ -161,6 +165,58 @@ function widgetCreate(data) {
     return text;
 }
 
+
+function rewardsDraw(data, standings) {
+    var name = standings.name;
+    var standing = data.name;
+    var icon = data.icon;
+    var text =
+        '                            <div class="col-sm-3 ">' +
+        '                                <div class="row">' +
+        '                                   <div class="height-auto width-50">' +
+        '                                   <h4 style="text-align: center">' + icon + '&nbsp;' + standing + '</h4>' +
+        '                                   </div>' +
+        '                                </div>' +
+        '                                <div class="row">' +
+        '                                   <div class="infobox width-auto">' +
+        '                                        <div class="infobox-icon">' +
+        '                                           <i style="color: gold" class="bigger-300 fas fa-trophy"></i>' +
+        '                                        </div>' +
+        '                                    </div>' +
+        '                                   <div class="infobox">' +
+        '                                        <div class="infobox-data">' +
+        '                                            <div class="infobox-content"><h3 style="margin-top: 10px">' + name + ' '+standings.max +'</h3></div>' +
+        '                                        </div>' +
+        '                                    </div>' +
+        '                                </div>' +
+        '                                <div class="row">' +
+        '                                   <div class="infobox width-auto">' +
+        '                                        <div class="infobox-icon">' +
+        '                                           <i style="color: silver" class="bigger-300 fas fa-trophy"></i>' +
+        '                                        </div>' +
+        '                                    </div>' +
+        '                                   <div class="infobox ">' +
+        '                                        <div class="infobox-data">' +
+        '                                            <div class="infobox-content"><h3 style="margin-top: 10px">' + name + '</h3></div>' +
+        '                                        </div>' +
+        '                                    </div>' +
+        '                                </div>' +
+        '                                <div class="row">' +
+        '                                   <div class="infobox width-auto">' +
+        '                                        <div class="infobox-icon">' +
+        '                                           <i style="color: saddlebrown" class="bigger-300 fas fa-trophy"></i>' +
+        '                                        </div>' +
+        '                                    </div>' +
+        '                                   <div class="infobox">' +
+        '                                        <div class="infobox-data">' +
+        '                                            <div class="infobox-content"><h3 style="margin-top: 10px">' + name + '</h3></div>' +
+        '                                        </div>' +
+        '                                    </div>' +
+        '                                </div>' +
+        '                             </div>';
+    return text;
+}
+
 function initComponents() {
     $('.sparkline').each(function () {
         var $box = $(this).closest('.infobox');
@@ -199,14 +255,74 @@ function elaborateActivities(data) {
     return kms;
 }
 
+function rewardsCalculator(data) {
+    var chart = [
+        {
+            name: 'KOM',
+            type: 'uphill',
+            field: 'stats.ytd_ride_totals.elevation_gain',
+            icon: '<i class="red bigger-150 fa fa-mountain"></i>'
+        },
+        {
+            name: 'Best assente',
+            type: 'outhome',
+            field: 'stats.ytd_ride_totals.elapsed_time',
+            icon: '<i class="orange bigger-150 fa fa-sign-out-alt"></i>'
+        },
+        {
+            name: 'Best km',
+            type: 'distance',
+            field: 'stats.ytd_ride_totals.distance',
+            icon: '<i class="blue bigger-150 fa fa-tachometer-alt"></i>'
+        }
+    ]
+    var rewards = $('#rewardsContent').html();
+    var i = 0;
+    for (var key in chart) {
+        // console.log(chart[key]);
+        if ((i == 0) || (i % 4 == 0))
+            rewards += '<div class="row">'
+
+        rewards += rewardsDraw(chart[key], standings(data, chart[key]));
+
+
+
+        i++;
+        if ((i > 0) && (i % 4 == 0))
+            rewards += '</div><div class="space-20"></div>'
+
+    }
+    $('#rewardsContent').html(rewards);
+}
+
+function getDescendantProp(obj, desc) {
+    var arr = desc.split(".");
+    while (arr.length && (obj = obj[arr.shift()])) ;
+    return obj;
+}
+
+function standings(data, chart) {
+    var max = 0;
+    var name = '';
+    for (var key in data) {
+        var app = getDescendantProp(data[key], chart.field);
+        name = (app>max) ? data[key].personal.firstname : name;
+        max = (app>max) ? app : max;
+
+
+        console.log(name)
+    }
+    return {name: name, max: max};
+}
+
 function successLoading(data) {
     // console.log(data);
     aths = JSON.parse(data);
     var i = 0;
-    // var text = $('#mainContent').html();
-    var text = '';
+    var text = $('#mainContent').html();
+    rewardsCalculator(aths);
     for (var key in aths) {
-        console.log(aths[key]);
+        // console.log(aths[key]);
         if ((i == 0) || (i % 3 == 0))
             text += '<div class="row">'
 
