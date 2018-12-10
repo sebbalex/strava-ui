@@ -14,7 +14,7 @@ var promises = [];
 var my = {};
 var fileData = "/tmp/strava_data.json";
 var fileStats = "/tmp/strava_update.json";
-var intervalUpdate = 6*60*60*1000; //six hours in ms
+var intervalUpdate = 6 * 60 * 60 * 1000; //six hours in ms
 // intervalUpdate = 10000; //test
 
 function getData(err, payload, limits, ath, nestObj, resolve, reject) {
@@ -122,8 +122,7 @@ my.run = function run(callback) {
     // my.getFromStrava(callback);
 }
 
-//refreshing stats cache
-setInterval(function () {
+function firstRun() {
     my.getFromStrava(function (data) {
         var size = Object.keys(data).length;
         var obj = {size: size, time: new Date()};
@@ -135,6 +134,15 @@ setInterval(function () {
             console.log("The stats file was saved!");
         });
     })
+}
+
+//create data and stats files
+firstRun();
+
+
+//refreshing stats cache
+setInterval(function () {
+    firstRun();
 }, intervalUpdate);
 
 module.exports = my;
