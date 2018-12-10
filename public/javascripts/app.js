@@ -182,43 +182,37 @@ function rewardsDraw(data, standings) {
     var standing = data.name;
     var icon = data.icon;
     var text =
-        '                            <div class="col-sm-3 ">' +
+        '                            <div class="col-sm-2 ">' +
         '                                <div class="row">' +
-        '                                   <div class="height-auto width-70">' +
+        '                                   <div class="height-auto width-100">' +
         '                                   <h4 style="text-align: center">' + icon + '&nbsp;' + standing + '</h4>' +
         '                                   </div>' +
         '                                </div>' +
         '                                <div class="row">' +
-        '                                   <div class="infobox width-auto">' +
+        '                                   <div class="infobox width-100">' +
         '                                        <div class="infobox-icon">' +
         '                                           <i style="color: gold" class="bigger-300 fas fa-trophy"></i>' +
         '                                        </div>' +
-        '                                    </div>' +
-        '                                   <div class="infobox">' +
         '                                        <div class="infobox-data">' +
         '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var1st + '</h4></div>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
         '                                <div class="row">' +
-        '                                   <div class="infobox width-auto">' +
+        '                                   <div class="infobox width-100">' +
         '                                        <div class="infobox-icon">' +
         '                                           <i style="color: silver" class="bigger-300 fas fa-trophy"></i>' +
         '                                        </div>' +
-        '                                    </div>' +
-        '                                   <div class="infobox ">' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var2nd + '</h4></div>' +
+        '                                            <div class="infobox-content"><h4 style="max-width: 100%;margin-top: 10px">' + var2nd + '</h4></div>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
         '                                <div class="row">' +
-        '                                   <div class="infobox width-auto">' +
+        '                                   <div class="infobox width-100">' +
         '                                        <div class="infobox-icon">' +
         '                                           <i style="color: saddlebrown" class="bigger-300 fas fa-trophy"></i>' +
         '                                        </div>' +
-        '                                    </div>' +
-        '                                   <div class="infobox">' +
         '                                        <div class="infobox-data">' +
         '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var3rd + '</h4></div>' +
         '                                        </div>' +
@@ -272,6 +266,7 @@ function rewardsCalculator(data) {
             name: 'KOM',
             type: 'uphill',
             field: 'stats.ytd_ride_totals.elevation_gain',
+            lengthMode: false,
             math: new Function('a', 'return a'),
             unit: 'm',
             icon: '<i class="red bigger-150 fa fa-mountain"></i>'
@@ -280,6 +275,7 @@ function rewardsCalculator(data) {
             name: 'Best assente',
             type: 'outhome',
             field: 'stats.ytd_ride_totals.elapsed_time',
+            lengthMode: false,
             math: new Function('a', 'return a/60/60/24'),
             unit: 'days',
             icon: '<i class="orange bigger-150 fa fa-sign-out-alt"></i>'
@@ -288,14 +284,25 @@ function rewardsCalculator(data) {
             name: 'Best km',
             type: 'distance',
             field: 'stats.ytd_ride_totals.distance',
+            lengthMode: false,
             math: new Function('a', 'return a/1000'),
             unit: 'Km',
             icon: '<i class="blue bigger-150 fa fa-tachometer-alt"></i>'
         },
         {
+            name: 'Best KOMs',
+            type: 'koms',
+            field: 'listkom',
+            lengthMode: true,
+            math: new Function('a', 'return a'),
+            unit: '',
+            icon: '<i class="black bigger-150 fa fa-crown"></i>'
+        },
+        {
             name: 'Best sempre in giro',
             type: 'counter',
             field: 'stats.ytd_ride_totals.count',
+            lengthMode: false,
             math: new Function('a', 'return a'),
             unit: '',
             icon: '<i class="pink bigger-150 fa fa-road"></i>'
@@ -305,14 +312,14 @@ function rewardsCalculator(data) {
     var i = 0;
     for (var key in chart) {
         // console.log(chart[key]);
-        if ((i == 0) || (i % 4 == 0))
+        if ((i == 0) || (i % 6 == 0))
             rewards += '<div class="row">'
 
         rewards += rewardsDraw(chart[key], standings(data, chart[key]));
 
 
         i++;
-        if ((i > 0) && (i % 4 == 0))
+        if ((i > 0) && (i % 6 == 0))
             rewards += '</div><div class="space-20"></div>'
 
     }
@@ -330,12 +337,18 @@ function standings(data, chart) {
     var rank = 1;
     var result = [];
     var names = [];
+    var isLength = chart.lengthMode;
     while (rank < 4) {
         var max = 0;
         var name = '';
 
         for (var key in data) {
-            var app = getDescendantProp(data[key], chart.field);
+            var app='';
+            if (isLength)
+                // console.log(isLength)
+                app = getDescendantProp(data[key], chart.field).length;
+            else
+                app = getDescendantProp(data[key], chart.field);
 
             //skip if already in rank
             if (names.includes(data[key].personal.firstname))
@@ -376,7 +389,42 @@ function successLoading(data) {
     initComponents();
 }
 
+function updateSyncStatus() {
+    var text = 'Update every 6hrs, updated to: ';
+    var elem = $('#nav-search > a > i');
+    $({deg: 0}).animate({deg: 360}, {
+        duration: 2000,
+        step: function (now) {
+            // in the step-callback (that is fired each step of the animation),
+            // you can use the `now` paramter which contains the current
+            // animation-position (`0` up to `angle`)
+            elem.css({
+                transform: 'rotate(' + now + 'deg)'
+            });
+        }
+    });
+    $('#syncedTo').html('loading new stats...');
+    setTimeout(function () {
+        $.ajax({
+            url: '/athletes/stats',
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                var time = moment(JSON.parse(data).time);
+                $('#syncedTo').html(text + time.format('H:mm of D/M'));
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log('Qualcosa è andato storto, prova a ricaricare la pagina!', 'danger', 'Error');
+                return false;
+            }
+        });
+    }, 2000)
+
+}
+
 $(function () {
+    var intervalRefreshStats = 60 * 5 * 1000 //5mins
+
     //load data from server
     $.ajax({
         url: '/athletes',
@@ -389,6 +437,12 @@ $(function () {
             return false;
         }
     });
+
+    updateSyncStatus();
+    setInterval(function () {
+        updateSyncStatus();
+    }, intervalRefreshStats)
+
 
 })
 

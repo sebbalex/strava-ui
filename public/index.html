@@ -35,6 +35,7 @@
 
     <!-- ace settings handler -->
     <script src="assets/js/ace-extra.js"></script>
+    <script src="assets/js/date-time/moment.js"></script>
 
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
@@ -42,6 +43,12 @@
     <script src="assets/js/html5shiv.js"></script>
     <script src="assets/js/respond.js"></script>
     <![endif]-->
+    <style type="text/css">
+        .infobox .infobox-content {
+            max-width: 100%;
+        }
+
+    </style>
 </head>
 
 <body class="no-skin">
@@ -56,15 +63,15 @@
 
     <div class="navbar-container" id="navbar-container">
         <!-- #section:basics/sidebar.mobile.toggle -->
-        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
-            <span class="sr-only">Toggle sidebar</span>
+        <!--<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">-->
+            <!--<span class="sr-only">Toggle sidebar</span>-->
 
-            <span class="icon-bar"></span>
+            <!--<span class="icon-bar"></span>-->
 
-            <span class="icon-bar"></span>
+            <!--<span class="icon-bar"></span>-->
 
-            <span class="icon-bar"></span>
-        </button>
+            <!--<span class="icon-bar"></span>-->
+        <!--</button>-->
 
         <!-- /section:basics/sidebar.mobile.toggle -->
         <div class="navbar-header pull-left">
@@ -116,14 +123,14 @@
                         <i class="ace-icon fa fa-home home-icon"></i>
                         <a href="#">Home</a>
                     </li>
-                    <i class="fas fa-angle-double-right"></i>
-                    <li class="active">Dashboard</li>
+                    <!--<i class="fas fa-angle-double-right"></i>-->
+                    <!--<li class="active">Dashboard</li>-->
                 </ul><!-- /.breadcrumb -->
 
                 <!-- #section:basics/content.searchbox -->
                 <div class="nav-search" id="nav-search">
-                    <i class="blue fa fa-sync-alt"></i>
-                    <span>Update every 6hrs</span>
+                    <a onClick="updateSyncStatus()"><i class="blue fa fa-sync-alt"></i></a>
+                    <span id="syncedTo"></span>
                 </div>
             </div>
 
