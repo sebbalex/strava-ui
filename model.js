@@ -137,7 +137,9 @@ function firstRun() {
 }
 
 //create data and stats files
-firstRun();
+//if not devel
+
+//firstRun();
 
 
 //refreshing stats cache
