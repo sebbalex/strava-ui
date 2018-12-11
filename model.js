@@ -17,6 +17,7 @@ var fileStats = "/tmp/strava_update.json";
 var intervalUpdate = 6 * 60 * 60 * 1000; //six hours in ms
 var maxPerPage = 150;
 var actType = 'Ride';
+
 // intervalUpdate = 10000; //test
 
 function getData(err, payload, limits, ath, nestObj, resolve, reject) {
@@ -140,9 +141,12 @@ my.firstRunOrUpdate = function firstRunOrUpdate() {
 
 //create data and stats files
 //if not devel
-
-//my.firstRunOrUpdate();
-
+if ((process.env.NODE_ENV) && (process.env.NODE_ENV == 'development')) {
+    debug("Running application in development mode");
+} else {
+    my.firstRunOrUpdate();
+    console.log("Running application in production mode");
+}
 
 //refreshing stats cache
 setInterval(function () {
