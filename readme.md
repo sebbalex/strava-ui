@@ -13,6 +13,7 @@ https://www.npmjs.com/package/strava-v3
 * 4  KOM list
 
 ####TODO
+*   Order activities by date descending
 
 
 
