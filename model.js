@@ -1,25 +1,20 @@
 const strava = require('strava-v3');
 const fs = require('fs');
 const debug = require('debug')('strava-ui:model');
+const config = require('./config');
 
 
-var athletes = {
-    15953830: {'id': 15953830, 'name': 'Sebba', 'code': 'de13b022abc4172c989c1574e41b0ac674c404bb'},
-    18102299: {'id': 18102299, 'name': 'Paris', 'code': '819cb549ca314d62a1c8996e1d31861c87bf0092'},
-    4381809: {'id': 4381809, 'name': 'Marian', 'code': 'd114079660602443fa023cdf6dd8a94e9f7c3d9e'},
-    3248824: {'id': 3248824, 'name': 'Danilo', 'code': 'ef0baa8a0d7a9604a7e6c537393cda0ee5ed39ec'},
-    12010653: {'id': 12010653, 'name': 'Gianmarco', 'code': '1ecbf4dbf63f643cd0f9d07aeb12766545405448'},
-    1281164: {'id': 1281164, 'name': 'Gabriele', 'code': '340d93382036bf3d2df7df7a28702430ae54c2b4'},
-};
+var athletes = require(config.file.athletes);
 var promises = [];
 var my = {};
-var fileData = "/tmp/strava_data.json";
-var fileStats = "/tmp/strava_update.json";
-var intervalUpdate = 6 * 60 * 60 * 1000; //six hours in ms
-var maxPerPage = 150;
-var actType = 'Ride';
+var fileData = config.file.fileData;
+var fileStats = config.file.fileStats;
+var intervalUpdate = config.stravaapi.intervalUpdate; //six hours in ms
+var maxPerPage = config.stravaapi.maxPerPage;
+var actType = config.stravaapi.actType;
 
 // intervalUpdate = 10000; //test
+
 
 function getData(err, payload, limits, ath, nestObj, resolve, reject) {
     if (!err) {
