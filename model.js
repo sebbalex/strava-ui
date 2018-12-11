@@ -1,5 +1,6 @@
 const strava = require('strava-v3');
 const fs = require('fs');
+const debug = require('debug')('strava-ui:model');
 
 
 var athletes = {
