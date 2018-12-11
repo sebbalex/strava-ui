@@ -17,4 +17,10 @@ router.get('/stats', function (req, res, next) {
 
 });
 
+router.get('/refresh', function (req, res, next) {
+    model.firstRunOrUpdate();
+    res.send({status: 'OK', message: 'reloading called, check /athletes/stats later'});
+
+});
+
 module.exports = router;

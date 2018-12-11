@@ -1,3 +1,5 @@
+var type = "Ride";
+
 function widgetCreate(data) {
     var year = 2018;
 
@@ -350,8 +352,10 @@ function rewardsCalculator(data) {
 
 function getMaxItemInArray(arr, name) {
     var max = 0;
-    // console.log('getMaxItemInArray', arr, name)
     for (var key in arr) {
+        //workaround for activity type, forced to Ride
+        if (arr[key].type != type)
+            continue;
         var app = arr[key][name];
         max = (app > max) ? app : max;
         // console.log(arr, name, max);
@@ -401,7 +405,7 @@ function standings(data, chart) {
     }
     return result;
 }
-
+aths = {};
 function successLoading(data) {
     // console.log(data);
     aths = JSON.parse(data);
