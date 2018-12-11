@@ -15,6 +15,8 @@ var my = {};
 var fileData = "/tmp/strava_data.json";
 var fileStats = "/tmp/strava_update.json";
 var intervalUpdate = 6 * 60 * 60 * 1000; //six hours in ms
+var maxPerPage = 150;
+var actType = 'Ride';
 // intervalUpdate = 10000; //test
 
 function getData(err, payload, limits, ath, nestObj, resolve, reject) {
@@ -39,7 +41,7 @@ my.getFromStrava = function getFromStrava(callback) {
 
     for (var key in athletes) {
         let ath = athletes[key];
-        let params = {id: ath.id, 'access_token': ath.code};
+        let params = {id: ath.id, 'access_token': ath.code, per_page: maxPerPage, type: actType};
         // promise = strava.athletes.stats(params,function(err,payload,limits) {getData(err,payload,limits,ath)});
 
         promise = new Promise(function (resolve, reject) {
@@ -122,7 +124,7 @@ my.run = function run(callback) {
     // my.getFromStrava(callback);
 }
 
-function firstRun() {
+my.firstRunOrUpdate = function firstRunOrUpdate() {
     my.getFromStrava(function (data) {
         var size = Object.keys(data).length;
         var obj = {size: size, time: new Date()};
@@ -139,12 +141,12 @@ function firstRun() {
 //create data and stats files
 //if not devel
 
-//firstRun();
+//my.firstRunOrUpdate();
 
 
 //refreshing stats cache
 setInterval(function () {
-    firstRun();
+    my.firstRunOrUpdate();
 }, intervalUpdate);
 
 module.exports = my;
