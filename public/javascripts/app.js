@@ -181,6 +181,7 @@ function rewardsDraw(data, standings) {
 
     var standing = data.name;
     var icon = data.icon;
+    var cupIcon = data.cupIcon || 'fas fa-trophy';
     var text =
         '                            <div class="col-sm-2 ">' +
         '                                <div class="row">' +
@@ -191,7 +192,7 @@ function rewardsDraw(data, standings) {
         '                                <div class="row">' +
         '                                   <div class="infobox width-100">' +
         '                                        <div class="infobox-icon">' +
-        '                                           <i style="color: gold" class="bigger-300 fas fa-trophy"></i>' +
+        '                                           <i style="color: gold" class="bigger-300 ' + cupIcon + '"></i>' +
         '                                        </div>' +
         '                                        <div class="infobox-data">' +
         '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var1st + '</h4></div>' +
@@ -201,7 +202,7 @@ function rewardsDraw(data, standings) {
         '                                <div class="row">' +
         '                                   <div class="infobox width-100">' +
         '                                        <div class="infobox-icon">' +
-        '                                           <i style="color: silver" class="bigger-300 fas fa-trophy"></i>' +
+        '                                           <i style="color: silver" class="bigger-300 ' + cupIcon + '"></i>' +
         '                                        </div>' +
         '                                        <div class="infobox-data">' +
         '                                            <div class="infobox-content"><h4 style="max-width: 100%;margin-top: 10px">' + var2nd + '</h4></div>' +
@@ -211,7 +212,7 @@ function rewardsDraw(data, standings) {
         '                                <div class="row">' +
         '                                   <div class="infobox width-100">' +
         '                                        <div class="infobox-icon">' +
-        '                                           <i style="color: saddlebrown" class="bigger-300 fas fa-trophy"></i>' +
+        '                                           <i style="color: saddlebrown" class="bigger-300 ' + cupIcon + '"></i>' +
         '                                        </div>' +
         '                                        <div class="infobox-data">' +
         '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var3rd + '</h4></div>' +
@@ -321,6 +322,7 @@ function rewardsCalculator(data) {
             name: 'Best alveare',
             type: 'counter',
             field: 'activities',
+            cupIcon: 'fab fa-forumbee',
             arrField: 'total_elevation_gain',
             mode: 'maxInArray',
             math: new Function('a', 'return a'),
