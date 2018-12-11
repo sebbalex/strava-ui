@@ -354,7 +354,7 @@ function getMaxItemInArray(arr, name) {
     var max = 0;
     for (var key in arr) {
         //workaround for activity type, forced to Ride
-        if (arr[key].type != type)
+        if ((arr[key].type) && (arr[key].type != type))
             continue;
         var app = arr[key][name];
         max = (app > max) ? app : max;
@@ -405,7 +405,9 @@ function standings(data, chart) {
     }
     return result;
 }
+
 aths = {};
+
 function successLoading(data) {
     // console.log(data);
     aths = JSON.parse(data);
