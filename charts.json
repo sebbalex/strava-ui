@@ -1,0 +1,89 @@
+[
+  {
+    "name": "KOM",
+    "type": "uphill",
+    "field": "stats.ytd_ride_totals.elevation_gain",
+    "mode": false,
+    "math": [
+      "a",
+      "return a"
+    ],
+    "unit": "m",
+    "icon": "<i class=\"red bigger-150 fa fa-mountain\"></i>"
+  },
+  {
+    "name": "Best assente",
+    "type": "outhome",
+    "field": "stats.ytd_ride_totals.elapsed_time",
+    "mode": false,
+    "math": [
+      "a",
+      "return a/60/60/24"
+    ],
+    "unit": "days",
+    "icon": "<i class=\"orange bigger-150 fa fa-sign-out-alt\"></i>"
+  },
+  {
+    "name": "Best km",
+    "type": "distance",
+    "field": "stats.ytd_ride_totals.distance",
+    "mode": false,
+    "math": [
+      "a",
+      "return a/1000"
+    ],
+    "unit": "Km",
+    "icon": "<i class=\"blue bigger-150 fa fa-tachometer-alt\"></i>"
+  },
+  {
+    "name": "Best KOMs",
+    "type": "koms",
+    "field": "listkom",
+    "mode": "length",
+    "math": [
+      "a",
+      "return a"
+    ],
+    "unit": "",
+    "icon": "<i class=\"black bigger-150 fa fa-crown\"></i>"
+  },
+  {
+    "name": "Best sempre in giro",
+    "type": "counter",
+    "field": "stats.ytd_ride_totals.count",
+    "mode": false,
+    "math": [
+      "a",
+      "return a"
+    ],
+    "unit": "",
+    "icon": "<i class=\"pink bigger-150 fa fa-road\"></i>"
+  },
+  {
+    "name": "Best pezzo de fero",
+    "type": "counter",
+    "field": "personal.bikes",
+    "arrField": "distance",
+    "mode": "maxInArray",
+    "math": [
+      "a",
+      "return a/1000"
+    ],
+    "unit": "",
+    "icon": "<i class=\"green bigger-150 fa fa-bicycle\"></i>"
+  },
+  {
+    "name": "Best alveare",
+    "type": "counter",
+    "field": "activities",
+    "cupIcon": "fab fa-forumbee",
+    "arrField": "total_elevation_gain",
+    "mode": "maxInArray",
+    "math": [
+      "a",
+      "return a"
+    ],
+    "unit": "",
+    "icon": "<i class=\"green bigger-150 fab fa-forumbee\"></i>"
+  }
+]
