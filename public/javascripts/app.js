@@ -354,7 +354,7 @@ aths = {};
 
 function successLoading(data) {
     // console.log(data);
-    aths = JSON.parse(data);
+    aths = data;
     var i = 0;
     var text = $('#mainContent').html();
     rewardsCalculator(aths);
@@ -396,7 +396,7 @@ function updateSyncStatus() {
             type: 'GET',
             cache: false,
             success: function (data) {
-                var time = moment(JSON.parse(data).time);
+                var time = moment(data.time);
                 $('#syncedTo').html(text + time.format('H:mm of D/M'));
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
