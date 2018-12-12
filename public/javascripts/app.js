@@ -264,90 +264,34 @@ function elaborateActivities(data) {
 }
 
 function rewardsCalculator(data) {
-    var chart = [
-        {
-            name: 'KOM',
-            type: 'uphill',
-            field: 'stats.ytd_ride_totals.elevation_gain',
-            mode: false,
-            math: new Function('a', 'return a'),
-            unit: 'm',
-            icon: '<i class="red bigger-150 fa fa-mountain"></i>'
-        },
-        {
-            name: 'Best assente',
-            type: 'outhome',
-            field: 'stats.ytd_ride_totals.elapsed_time',
-            mode: false,
-            math: new Function('a', 'return a/60/60/24'),
-            unit: 'days',
-            icon: '<i class="orange bigger-150 fa fa-sign-out-alt"></i>'
-        },
-        {
-            name: 'Best km',
-            type: 'distance',
-            field: 'stats.ytd_ride_totals.distance',
-            mode: false,
-            math: new Function('a', 'return a/1000'),
-            unit: 'Km',
-            icon: '<i class="blue bigger-150 fa fa-tachometer-alt"></i>'
-        },
-        {
-            name: 'Best KOMs',
-            type: 'koms',
-            field: 'listkom',
-            mode: 'length',
-            math: new Function('a', 'return a'),
-            unit: '',
-            icon: '<i class="black bigger-150 fa fa-crown"></i>'
-        },
-        {
-            name: 'Best sempre in giro',
-            type: 'counter',
-            field: 'stats.ytd_ride_totals.count',
-            mode: false,
-            math: new Function('a', 'return a'),
-            unit: '',
-            icon: '<i class="pink bigger-150 fa fa-road"></i>'
-        },
-        {
-            name: 'Best pezzo de fero',
-            type: 'counter',
-            field: 'personal.bikes',
-            arrField: 'distance',
-            mode: 'maxInArray',
-            math: new Function('a', 'return a/1000'),
-            unit: '',
-            icon: '<i class="green bigger-150 fa fa-bicycle"></i>'
-        },
-        {
-            name: 'Best alveare',
-            type: 'counter',
-            field: 'activities',
-            cupIcon: 'fab fa-forumbee',
-            arrField: 'total_elevation_gain',
-            mode: 'maxInArray',
-            math: new Function('a', 'return a'),
-            unit: '',
-            icon: '<i class="green bigger-150 fab fa-forumbee"></i>'
+    $.ajax({
+        url: '/athletes/charts',
+        type: 'GET',
+        cache: true,
+        success: function (dataAjax) {
+            chart = dataAjax;
+            var rewards = $('#rewardsContent').html();
+            var i = 0;
+            for (var key in chart) {
+                //hack to be able to load chart json data from file/server
+                var math = new Function(chart[key].math[0], chart[key].math[1]);
+                chart[key].math = math;
+
+                if ((i == 0) || (i % 6 == 0))
+                    rewards += '<div class="row">'
+
+                rewards += rewardsDraw(chart[key], standings(data, chart[key]));
+
+
+                i++;
+                if ((i > 0) && (i % 6 == 0))
+                    rewards += '</div><div class="space-20"></div>'
+
+            }
+            $('#rewardsContent').html(rewards);
+
         }
-    ]
-    var rewards = $('#rewardsContent').html();
-    var i = 0;
-    for (var key in chart) {
-        // console.log(chart[key]);
-        if ((i == 0) || (i % 6 == 0))
-            rewards += '<div class="row">'
-
-        rewards += rewardsDraw(chart[key], standings(data, chart[key]));
-
-
-        i++;
-        if ((i > 0) && (i % 6 == 0))
-            rewards += '</div><div class="space-20"></div>'
-
-    }
-    $('#rewardsContent').html(rewards);
+    });
 }
 
 function getMaxItemInArray(arr, name) {

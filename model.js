@@ -4,9 +4,9 @@ const debug = require('debug')('strava-ui:model');
 const config = require('./config');
 
 
-var athletes = require(config.file.athletes);
-var promises = [];
 var my = {};
+var promises = [];
+var athletes = require(config.file.athletes);
 var fileData = config.file.fileData;
 var fileStats = config.file.fileStats;
 var intervalUpdate = config.stravaapi.intervalUpdate; //six hours in ms
@@ -78,14 +78,8 @@ my.getFromStrava = function getFromStrava(callback) {
 
     Promise.all(promises)
         .then(function (data) {
-            // console.log(athletes);
-            fs.writeFile(fileData, JSON.stringify(athletes), function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-
-                console.log("The data file was saved!");
-            });
+            //data here doesnt contain anything
+            my.writeToFile(athletes);
         })
         .then(function (data) {
             //TODO check if data are consistent - Object.keys(data).length;
@@ -97,6 +91,22 @@ my.getFromStrava = function getFromStrava(callback) {
         });
 }
 
+my.writeStatsToFile = function writeStatsToFile(data) {
+    fs.writeFile(fileStats, JSON.stringify(data), function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("The stats file was saved!");
+    });
+}
+my.writeToFile = function writeToFile(data) {
+    fs.writeFile(fileData, JSON.stringify(data), function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("The data file was saved!");
+    });
+}
 
 my.readFromCache = function readFromCache(callback) {
     fs.readFile(fileData, function (err, data) {
@@ -126,12 +136,7 @@ my.firstRunOrUpdate = function firstRunOrUpdate() {
         var size = Object.keys(data).length;
         var obj = {size: size, time: new Date()};
         console.log('refreshing stats...', size);
-        fs.writeFile(fileStats, JSON.stringify(obj), function (err) {
-            if (err) {
-                return console.log(err);
-            }
-            console.log("The stats file was saved!");
-        });
+        my.writeStatsToFile(obj);
     })
 }
 
