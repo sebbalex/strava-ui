@@ -9,6 +9,7 @@ https://www.npmjs.com/package/strava-v3
 ##Before run
 create a json file named athletes.json where store
 credentials token for user who wants to monitor
+
 #####athletes.json:
 ```{
   "15953830": {
@@ -49,6 +50,9 @@ even chart can be configured on the fly in external json file
     "icon": "<i class=\"red bigger-150 fa fa-mountain\"></i>"   #chart logo
   }
 ```
+and of course
+
+`npm install`
 
 ##Features
 * 1  total ascend
@@ -58,8 +62,8 @@ even chart can be configured on the fly in external json file
 
 ####TODO
 *   Order activities by date descending
-
-
+*   OAuth must be implemented as well
+*   Tests
 
 ##Bugs
 

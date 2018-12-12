@@ -1,11 +1,17 @@
 {
   "name": "strava-ui",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "author": "Alessandro Sebastiani",
   "scripts": {
     "start": "node ./bin/www",
-    "startDev": ". ./strava-ui.sh &&  nodemon bin/www -i public"
+    "startDev": ". ./strava-ui.sh &&  nodemon bin/www -i public",
+    "test": ". ./strava-ui.sh && mocha -t 30000"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.0.0",
+    "mocha": "^5.2.0"
   },
   "dependencies": {
     "compression": "^1.7.3",
