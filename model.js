@@ -4,24 +4,22 @@ const debug = require('debug')('strava-ui:model');
 const config = require('./config');
 
 
-var my = {};
-var promises = [];
-var athletes = require(config.file.athletes);
-var fileData = config.file.fileData;
-var fileStats = config.file.fileStats;
-var intervalUpdate = config.stravaapi.intervalUpdate; //six hours in ms
-var maxPerPage = config.stravaapi.maxPerPage;
-var actType = config.stravaapi.actType;
+let my = {};
+let promises = [];
+let athletes = {};
 
-// intervalUpdate = 10000; //test
+const athletesLoad = require(config.file.athletes);
+const fileData = config.file.fileData;
+const fileStats = config.file.fileStats;
+const intervalUpdate = config.stravaapi.intervalUpdate; //six hours in ms
+const maxPerPage = config.stravaapi.maxPerPage;
+const actType = config.stravaapi.actType;
 
 
-function getData(err, payload, limits, ath, nestObj, resolve, reject) {
+function getData(err, payload, limits, athID, nestObj, resolve, reject) {
     if (!err) {
         if (payload) {
-            ath[nestObj] = payload;
-            athletes[ath.id] = ath;
-            // console.log(ath);
+            athletes[athID][nestObj] = payload;
         } else {
             console.log(payload);
         }
@@ -30,21 +28,21 @@ function getData(err, payload, limits, ath, nestObj, resolve, reject) {
         console.log(err);
         reject(err);
     }
-    resolve(ath);
+    resolve(athID);
 }
 
 my.getFromStrava = function getFromStrava(callback) {
+    for (var key in athletesLoad) {
+        let ath = athletesLoad[key];
 
-
-    for (var key in athletes) {
-        let ath = athletes[key];
+        //precreate athletes obj out with id
+        athletes[key] = {};
         let params = {id: ath.id, 'access_token': ath.code, per_page: maxPerPage, type: actType};
-        // promise = strava.athletes.stats(params,function(err,payload,limits) {getData(err,payload,limits,ath)});
 
         promise = new Promise(function (resolve, reject) {
             strava.athletes.stats(params,
                 function (err, payload, limits) {
-                    getData(err, payload, limits, ath, 'stats', resolve, reject)
+                    getData(err, payload, limits, ath.id, 'stats', resolve, reject)
                 });
         });
         promises.push(promise);
@@ -52,16 +50,16 @@ my.getFromStrava = function getFromStrava(callback) {
         promise = new Promise(function (resolve, reject) {
             strava.athlete.get(params,
                 function (err, payload, limits) {
-                    getData(err, payload, limits, ath, 'personal', resolve, reject)
+                    getData(err, payload, limits, ath.id, 'personal', resolve, reject)
                 });
         });
         promises.push(promise);
 
-
+        //
         promise = new Promise(function (resolve, reject) {
             strava.athletes.listKoms(params,
                 function (err, payload, limits) {
-                    getData(err, payload, limits, ath, 'listkom', resolve, reject)
+                    getData(err, payload, limits, ath.id, 'listkom', resolve, reject)
                 });
         });
         promises.push(promise);
@@ -69,7 +67,7 @@ my.getFromStrava = function getFromStrava(callback) {
         promise = new Promise(function (resolve, reject) {
             strava.athlete.listActivities(params,
                 function (err, payload, limits) {
-                    getData(err, payload, limits, ath, 'activities', resolve, reject)
+                    getData(err, payload, limits, ath.id, 'activities', resolve, reject)
                 });
         });
         promises.push(promise);
