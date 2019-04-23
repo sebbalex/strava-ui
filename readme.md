@@ -6,7 +6,7 @@ on web
 ## Dependencies
 https://www.npmjs.com/package/strava-v3
 
-##Before run
+## Before run
 create a json file named athletes.json where store
 credentials token for user who wants to monitor
 
