@@ -3,14 +3,14 @@ A simple project which involve our MTB group to get
 some statistics and make them funny with some widgets
 on web
 
-##Dependencies
+## Dependencies
 https://www.npmjs.com/package/strava-v3
 
 ##Before run
 create a json file named athletes.json where store
 credentials token for user who wants to monitor
 
-#####athletes.json:
+##### athletes.json:
 ```{
   "15953830": {
     "id": 15953830,
@@ -20,7 +20,7 @@ credentials token for user who wants to monitor
 ```
  one object for every user, obj key must be the userid
 
-#####strava-ui.sh:
+##### strava-ui.sh:
 ```
 #!/usr/bin/env bash
  
@@ -33,7 +33,7 @@ export INSTANCE_NAME=strava-ui
 others configuration can be seen in config.js
 
 even chart can be configured on the fly in external json file
-#####charts.json
+##### charts.json
 ```
 {
     "name": "KOM",                                              #name visible in view
@@ -54,25 +54,25 @@ and of course
 
 `npm install`
 
-##Features
+## Features
 * 1  total ascend
 * 2  personal info
 * 3  last activity
 * 4  KOM list
 
-####TODO
+#### TODO
 *   Order activities by date descending
 *   OAuth must be implemented as well
 *   Tests
 
-##Bugs
+## Bugs
 
-####Major
+#### Major
 * activities are since the beginning
 * activities are not ordered by date
 
-####Minor
+#### Minor
 
 
 
-##Fixed
+## Fixed
