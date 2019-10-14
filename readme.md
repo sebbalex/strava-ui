@@ -10,7 +10,7 @@ https://www.npmjs.com/package/strava-v3
 create a json file named athletes.json where store
 credentials token for user who wants to monitor
 
-##### athletes.json:
+##### athletes.json copy from athletes.json-example:
 ```{
   "15953830": {
     "id": 15953830,
@@ -20,10 +20,8 @@ credentials token for user who wants to monitor
 ```
  one object for every user, obj key must be the userid
 
-##### strava-ui.sh:
-```
-#!/usr/bin/env bash
- 
+##### .env copy from .env-example:
+``` 
 export DEBUG=*
 export NODE_ENV=development
 export EXPRESS_IP=127.0.0.1

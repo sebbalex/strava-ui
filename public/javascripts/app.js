@@ -1,9 +1,9 @@
 var type = "Ride";
 
 function widgetCreate(data) {
-    var year = 2018;
+    var year = new Date().getFullYear();
 
-    var name = data.personal.firstname;
+    var name = data.personal.firstname + " " +  data.personal.lastname.substr(0, 1) + ".";
     var distance = data.stats.ytd_ride_totals.distance;
     var counter = data.stats.ytd_ride_totals.count;
     var tu = (distance / 1000) / counter;
@@ -169,9 +169,9 @@ function widgetCreate(data) {
 
 
 function rewardsDraw(data, standings) {
-    var name1st = standings[0].name;
-    var name2nd = standings[1].name;
-    var name3rd = standings[2].name;
+    var name1st = standings[0].athlete.firstname + " " +  standings[0].athlete.lastname.substr(0, 1) + ".";
+    var name2nd = standings[1].athlete.firstname + " " +  standings[1].athlete.lastname.substr(0, 1) + ".";
+    var name3rd = standings[2].athlete.firstname + " " +  standings[2].athlete.lastname.substr(0, 1) + ".";
 
     var max1st = standings[0].max;
     var max2nd = standings[1].max;
@@ -323,6 +323,7 @@ function standings(data, chart) {
     while (rank < 4) {
         var max = 0;
         var name = '';
+        let athlete = {};
 
         for (var key in data) {
             var app = '';
@@ -335,16 +336,21 @@ function standings(data, chart) {
                 app = getDescendantProp(data[key], chart.field);
 
             //skip if already in rank
-            if (names.includes(data[key].personal.firstname))
+            if (names.includes(data[key].personal.username))
                 continue;
+            
 
-            name = (app > max) ? data[key].personal.firstname : name;
+            name = (app > max) ? data[key].personal.username : name;
+            // workaround to inject all personal data in charting
+            // useful to get not just the name but everything else
+            // see athlete with same name issue #1
+            athlete = (app > max) ? data[key].personal : athlete;
             max = (app > max) ? app : max;
 
-            // console.log(rank, name, max, chart.name);
+            console.log(rank, name, max, chart.name, athlete);
         }
         names.push(name);
-        result.push({rank: rank, name: name, max: chart.math(max).toFixed(0)});
+        result.push({rank: rank, name: name, athlete: athlete, max: chart.math(max).toFixed(0)});
         rank++;
     }
     return result;

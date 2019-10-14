@@ -5,8 +5,8 @@
   "author": "Alessandro Sebastiani",
   "scripts": {
     "start": "node ./bin/www",
-    "startDev": ". ./strava-ui.sh &&  nodemon bin/www -i public",
-    "test": ". ./strava-ui.sh && mocha -t 30000"
+    "dev": ". .env &&  nodemon bin/www -i public",
+    "test": ". .env && mocha -t 30000"
   },
   "devDependencies": {
     "chai": "^4.2.0",
