@@ -1,9 +1,11 @@
 var type = "Ride";
+var stravaBaseUrl = "https://strava.com";
 
 function widgetCreate(data) {
     var year = new Date().getFullYear();
 
     var name = data.personal.firstname + " " +  data.personal.lastname.substr(0, 1) + ".";
+    var linkProfile = `${stravaBaseUrl}/athletes/${data.personal.id}`;
     var distance = data.stats.ytd_ride_totals.distance;
     var counter = data.stats.ytd_ride_totals.count;
     var tu = (distance / 1000) / counter;
@@ -29,7 +31,9 @@ function widgetCreate(data) {
         '' +
         '                                    <div class="infobox-data">' +
         // '                                        <span class="infobox-data-number"></span>' +
-        '                                        <div class="infobox-content"><h3 style="margin-top: 10px">' + name + '</h3></div>' +
+        '                                        <a href="' + linkProfile + '" target="_blank"> ' +
+        '                                           <div class="infobox-content"><h3 style="margin-top: 10px">' + name + '</h3></div>' +
+        '                                        </a>' +
         '                                    </div>' +
         '' +
         '                                    <!-- #section:pages/dashboard.infobox.stat -->' +
@@ -173,6 +177,11 @@ function rewardsDraw(data, standings) {
     var name2nd = standings[1].athlete.firstname + " " +  standings[1].athlete.lastname.substr(0, 1) + ".";
     var name3rd = standings[2].athlete.firstname + " " +  standings[2].athlete.lastname.substr(0, 1) + ".";
 
+    var linkProfile1st = `${stravaBaseUrl}/athletes/${standings[0].athlete.id}`;
+    var linkProfile2nd = `${stravaBaseUrl}/athletes/${standings[1].athlete.id}`;
+    var linkProfile3rd = `${stravaBaseUrl}/athletes/${standings[2].athlete.id}`;
+
+
     var max1st = standings[0].max;
     var max2nd = standings[1].max;
     var max3rd = standings[2].max;
@@ -188,7 +197,7 @@ function rewardsDraw(data, standings) {
         '                            <div class="col-sm-2 ">' +
         '                                <div class="row">' +
         '                                   <div class="height-auto width-100">' +
-        '                                   <h4 style="text-align: center">' + icon + '&nbsp;' + standing + '</h4>' +
+        '                                   <h5 style="text-align: center">' + icon + '&nbsp;' + standing + '</h5>' +
         '                                   </div>' +
         '                                </div>' +
         '                                <div class="row">' +
@@ -197,7 +206,9 @@ function rewardsDraw(data, standings) {
         '                                           <i style="color: gold" class="bigger-300 ' + cupIcon + '"></i>' +
         '                                        </div>' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var1st + '</h4></div>' +
+        '                                            <a href="' + linkProfile1st + '" target="_blank">' +
+        '                                              <div class="infobox-content"><h5 style="margin-top: 10px">' + var1st + '</h5></div>' +
+        '                                            </a>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
@@ -207,7 +218,9 @@ function rewardsDraw(data, standings) {
         '                                           <i style="color: silver" class="bigger-300 ' + cupIcon + '"></i>' +
         '                                        </div>' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h4 style="max-width: 100%;margin-top: 10px">' + var2nd + '</h4></div>' +
+        '                                            <a href="' + linkProfile2nd + '" target="_blank">' +
+        '                                              <div class="infobox-content"><h5 style="max-width: 100%;margin-top: 10px">' + var2nd + '</h5></div>' +
+        '                                            </a>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
@@ -217,7 +230,9 @@ function rewardsDraw(data, standings) {
         '                                           <i style="color: saddlebrown" class="bigger-300 ' + cupIcon + '"></i>' +
         '                                        </div>' +
         '                                        <div class="infobox-data">' +
-        '                                            <div class="infobox-content"><h4 style="margin-top: 10px">' + var3rd + '</h4></div>' +
+        '                                            <a href="' + linkProfile3rd + '" target="_blank">' +
+        '                                              <div class="infobox-content"><h5 style="margin-top: 10px">' + var3rd + '</h5></div>' +
+        '                                            </a>' +
         '                                        </div>' +
         '                                    </div>' +
         '                                </div>' +
@@ -347,7 +362,7 @@ function standings(data, chart) {
             athlete = (app > max) ? data[key].personal : athlete;
             max = (app > max) ? app : max;
 
-            console.log(rank, name, max, chart.name, athlete);
+            // console.log(rank, name, max, chart.name, athlete);
         }
         names.push(name);
         result.push({rank: rank, name: name, athlete: athlete, max: chart.math(max).toFixed(0)});
