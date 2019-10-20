@@ -2,6 +2,7 @@ const strava = require('strava-v3');
 const fs = require('fs');
 const debug = require('debug')('strava-ui:model');
 const config = require('./config');
+const auth = require('./auth/auth')
 
 
 let my = {};
@@ -35,40 +36,56 @@ my.getFromStrava = function getFromStrava(callback) {
     for (var key in athletesLoad) {
         let ath = athletesLoad[key];
 
+        promiseAuth = auth.getToken(ath.code);
+
         //precreate athletes obj out with id
         athletes[key] = {};
-        let params = {id: ath.id, 'access_token': ath.code, per_page: maxPerPage, type: actType};
+        let params = { id: ath.id, per_page: maxPerPage, type: actType };
 
-        promise = new Promise(function (resolve, reject) {
-            strava.athletes.stats(params,
-                function (err, payload, limits) {
-                    getData(err, payload, limits, ath.id, 'stats', resolve, reject)
-                });
+        promise = promiseAuth.then((token) => {
+            console.log("token:", token, ath);
+            
+            params.access_token = token;
+            return new Promise(function (resolve, reject) {
+                strava.athletes.stats(params,
+                    function (err, payload, limits) {
+                        getData(err, payload, limits, ath.id, 'stats', resolve, reject)
+                    });
+            });
         });
         promises.push(promise);
 
-        promise = new Promise(function (resolve, reject) {
-            strava.athlete.get(params,
-                function (err, payload, limits) {
-                    getData(err, payload, limits, ath.id, 'personal', resolve, reject)
-                });
+        promise = promiseAuth.then((token) => {
+            params.access_token = token;
+            return new Promise(function (resolve, reject) {
+                strava.athlete.get(params,
+                    function (err, payload, limits) {
+                        getData(err, payload, limits, ath.id, 'personal', resolve, reject)
+                    });
+            });
         });
         promises.push(promise);
 
         //
-        promise = new Promise(function (resolve, reject) {
-            strava.athletes.listKoms(params,
-                function (err, payload, limits) {
-                    getData(err, payload, limits, ath.id, 'listkom', resolve, reject)
-                });
+        promise = promiseAuth.then((token) => {
+            params.access_token = token;
+            return new Promise(function (resolve, reject) {
+                strava.athletes.listKoms(params,
+                    function (err, payload, limits) {
+                        getData(err, payload, limits, ath.id, 'listkom', resolve, reject)
+                    });
+            });
         });
         promises.push(promise);
 
-        promise = new Promise(function (resolve, reject) {
-            strava.athlete.listActivities(params,
-                function (err, payload, limits) {
-                    getData(err, payload, limits, ath.id, 'activities', resolve, reject)
-                });
+        promise = promiseAuth.then((token) => {
+            params.access_token = token;
+            return new Promise(function (resolve, reject) {
+                strava.athlete.listActivities(params,
+                    function (err, payload, limits) {
+                        getData(err, payload, limits, ath.id, 'activities', resolve, reject)
+                    });
+            });
         });
         promises.push(promise);
     }
@@ -132,7 +149,7 @@ my.run = function run(callback) {
 my.firstRunOrUpdate = function firstRunOrUpdate() {
     my.getFromStrava(function (data) {
         var size = Object.keys(data).length;
-        var obj = {size: size, time: new Date()};
+        var obj = { size: size, time: new Date() };
         console.log('refreshing stats...', size);
         my.writeStatsToFile(obj);
     })
