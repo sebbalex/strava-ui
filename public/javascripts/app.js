@@ -173,9 +173,17 @@ function widgetCreate(data) {
 
 
 function rewardsDraw(data, standings) {
-    var name1st = standings[0].athlete.firstname + " " +  standings[0].athlete.lastname.substr(0, 1) + ".";
-    var name2nd = standings[1].athlete.firstname + " " +  standings[1].athlete.lastname.substr(0, 1) + ".";
-    var name3rd = standings[2].athlete.firstname + " " +  standings[2].athlete.lastname.substr(0, 1) + ".";
+    let firstname = (standings[0] && standings[0].athlete && standings[0].athlete.firstname) ? standings[0].athlete.firstname :  '';
+    let lastname = (standings[0] && standings[0].athlete && standings[0].athlete.lastname) ? standings[0].athlete.lastname.substr(0, 1) + ".": '';
+    var name1st = firstname + " " +  lastname;
+    
+    firstname = (standings[1] && standings[1].athlete && standings[1].athlete.firstname) ? standings[1].athlete.firstname :  '';
+    lastname = (standings[1] && standings[1].athlete && standings[1].athlete.lastname) ? standings[1].athlete.lastname.substr(0, 1) + ".": '';
+    var name2nd = firstname + " " +  lastname;
+
+    firstname = (standings[2] && standings[2].athlete && standings[2].athlete.firstname) ? standings[2].athlete.firstname :  '';
+    lastname = (standings[2] && standings[2].athlete && standings[2].athlete.lastname) ? standings[2].athlete.lastname.substr(0, 1) + ".": '';
+    var name3rd = firstname + " " +  lastname;
 
     var linkProfile1st = `${stravaBaseUrl}/athletes/${standings[0].athlete.id}`;
     var linkProfile2nd = `${stravaBaseUrl}/athletes/${standings[1].athlete.id}`;
@@ -341,6 +349,10 @@ function standings(data, chart) {
         let athlete = {};
 
         for (var key in data) {
+            if(data[key].stats.message == "Authorization Error") {
+                console.log("skipping", data[key])
+                continue;
+            }
             var app = '';
             if (isLength)
             // console.log(isLength)
@@ -380,6 +392,9 @@ function successLoading(data) {
     var text = $('#mainContent').html();
     rewardsCalculator(aths);
     for (var key in aths) {
+        if(aths[key].stats.message == "Authorization Error") {
+            continue;
+        }
         // console.log(aths[key]);
         if ((i == 0) || (i % 3 == 0))
             text += '<div class="row">'
