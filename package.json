@@ -4,9 +4,9 @@
   "private": true,
   "author": "Alessandro Sebastiani",
   "scripts": {
-    "start": ". .env && node ./bin/www",
-    "dev": ". .env &&  nodemon bin/www -i public",
-    "test": ". .env && mocha -t 30000"
+    "start": ". ./.env && node ./bin/www",
+    "dev": ". ./.env &&  nodemon bin/www -i public",
+    "test": ". ./.env && mocha -t 30000"
   },
   "devDependencies": {
     "chai": "^4.2.0",
