@@ -23,7 +23,7 @@ config.file = {
 config.app = {
     client_id: process.env.CLIENT_ID || 'xxxx',
     client_secret: process.env.CLIENT_SECRET || 'xxxxxxxxxxxxxx',
-    redirect_uri: process.env.REDIRECT_URI || 'http://localhost:3000/oauth2'
+    redirect_uri: process.env.REDIRECT_URI || 'http://localhost:3000/auth/oauth2'
 }
 
 config.stravaapi = {

@@ -9,7 +9,6 @@ let my = {};
 let promises = [];
 let athletes = {};
 
-const athletesLoad = require(config.file.athletes);
 const fileData = config.file.fileData;
 const fileStats = config.file.fileStats;
 const intervalUpdate = config.stravaapi.intervalUpdate; //six hours in ms
@@ -32,7 +31,15 @@ function getData(err, payload, limits, athID, nestObj, resolve, reject) {
     resolve(athID);
 }
 
-my.getFromStrava = function getFromStrava(callback) {
+my.getFromStrava = function (callback) {
+    // const athletesLoad = require(config.file.athletes);
+    let rawdata = fs.readFileSync(config.file.athletes);
+    let athletesLoad = JSON.parse(rawdata);
+
+    if (Object.entries(athletesLoad).length === 0 && athletesLoad.constructor === Object) {
+        athletes = {};
+    }
+    
     for (var key in athletesLoad) {
         let ath = athletesLoad[key];
 
@@ -43,9 +50,9 @@ my.getFromStrava = function getFromStrava(callback) {
         let params = { id: ath.id, per_page: maxPerPage, type: actType };
 
         promise = promiseAuth.then((token) => {
-            console.log("token:", token, ath);
-            
-            params.access_token = token;
+            // console.log("token:", token, ath);
+
+            params.access_token = token.access_token;
             return new Promise(function (resolve, reject) {
                 strava.athletes.stats(params,
                     function (err, payload, limits) {
@@ -56,7 +63,7 @@ my.getFromStrava = function getFromStrava(callback) {
         promises.push(promise);
 
         promise = promiseAuth.then((token) => {
-            params.access_token = token;
+            params.access_token = token.access_token;
             return new Promise(function (resolve, reject) {
                 strava.athlete.get(params,
                     function (err, payload, limits) {
@@ -68,7 +75,7 @@ my.getFromStrava = function getFromStrava(callback) {
 
         //
         promise = promiseAuth.then((token) => {
-            params.access_token = token;
+            params.access_token = token.access_token;
             return new Promise(function (resolve, reject) {
                 strava.athletes.listKoms(params,
                     function (err, payload, limits) {
@@ -79,7 +86,7 @@ my.getFromStrava = function getFromStrava(callback) {
         promises.push(promise);
 
         promise = promiseAuth.then((token) => {
-            params.access_token = token;
+            params.access_token = token.access_token;
             return new Promise(function (resolve, reject) {
                 strava.athlete.listActivities(params,
                     function (err, payload, limits) {
@@ -106,7 +113,7 @@ my.getFromStrava = function getFromStrava(callback) {
         });
 }
 
-my.writeStatsToFile = function writeStatsToFile(data) {
+my.writeStatsToFile = function(data) {
     fs.writeFile(fileStats, JSON.stringify(data), function (err) {
         if (err) {
             return console.log(err);
@@ -114,7 +121,7 @@ my.writeStatsToFile = function writeStatsToFile(data) {
         console.log("The stats file was saved!");
     });
 }
-my.writeToFile = function writeToFile(data) {
+my.writeToFile = function(data) {
     fs.writeFile(fileData, JSON.stringify(data), function (err) {
         if (err) {
             return console.log(err);
@@ -123,7 +130,7 @@ my.writeToFile = function writeToFile(data) {
     });
 }
 
-my.readFromCache = function readFromCache(callback) {
+my.readFromCache = function(callback) {
     fs.readFile(fileData, function (err, data) {
         if (err) throw err;
         // console.log(JSON.parse(data))
@@ -131,7 +138,7 @@ my.readFromCache = function readFromCache(callback) {
     });
 }
 
-my.readStats = function readFromCache(callback) {
+my.readStats = function(callback) {
     fs.readFile(fileStats, function (err, data) {
         if (err) throw err;
         // console.log(JSON.parse(data))
@@ -139,14 +146,14 @@ my.readStats = function readFromCache(callback) {
     });
 }
 
-my.run = function run(callback) {
+my.run = function(callback) {
     //cache reading
     my.readFromCache(callback);
     //get anytime
     // my.getFromStrava(callback);
 }
 
-my.firstRunOrUpdate = function firstRunOrUpdate() {
+my.firstRunOrUpdate = function () {
     my.getFromStrava(function (data) {
         var size = Object.keys(data).length;
         var obj = { size: size, time: new Date() };

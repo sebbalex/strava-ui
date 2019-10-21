@@ -1,9 +1,9 @@
-const https = require('https')
-const config = require('../config')
+const https = require('https');
+const config = require('../config');
 
 
 authorize = () => {
-    config = {
+    conf = {
         client_id: config.app.client_id,
         client_secret: config.app.client_secret,
         url: "https://www.strava.com/api/v3/oauth/token",
@@ -13,7 +13,9 @@ authorize = () => {
         scope: "read_all,activity:read_all,profile:read_all"
     };
 
-    const options = new URL(config.url);
+    const options = new URL(conf.url);
+    console.log(options, conf);
+    
     const req = https.request(options, res => {
         console.log(`statusCode: ${res.statusCode}`)
         res.on('data', d => {
@@ -43,8 +45,8 @@ getToken = (code) => {
 
         console.log(options)
         const reqs = https.request(options, (ress) => {
-            console.log('statusCode:', ress.statusCode);
-            console.log('headers:', ress.headers);
+            // console.log('statusCode:', ress.statusCode);
+            // console.log('headers:', ress.headers);
 
             // cumulate data
             var body = [];
@@ -55,11 +57,13 @@ getToken = (code) => {
             ress.on('end', function () {
                 try {
                     body = JSON.parse(Buffer.concat(body).toString());
+                    // console.log(body);
+                    
                 } catch (e) {
                     console.error(e)
                     reject(e);
                 }
-                resolve(body.access_token);
+                resolve(body);
             });
         });
 

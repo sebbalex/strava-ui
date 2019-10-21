@@ -3,6 +3,7 @@ var stravaBaseUrl = "https://strava.com";
 
 function widgetCreate(data) {
     var year = new Date().getFullYear();
+    $("#footer-year").html(year);
 
     var name = data.personal.firstname + " " +  data.personal.lastname.substr(0, 1) + ".";
     var linkProfile = `${stravaBaseUrl}/athletes/${data.personal.id}`;
@@ -350,7 +351,6 @@ function standings(data, chart) {
 
         for (var key in data) {
             if(data[key].stats.message == "Authorization Error") {
-                console.log("skipping", data[key])
                 continue;
             }
             var app = '';
@@ -442,6 +442,10 @@ function updateSyncStatus() {
         });
     }, 2000)
 
+}
+function addAthlete() {
+    console.log('adding athlete');
+    location.href="/auth";
 }
 
 $(function () {
