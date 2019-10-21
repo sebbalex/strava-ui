@@ -36,7 +36,9 @@ my.getFromStrava = function (callback) {
     let rawdata = fs.readFileSync(config.file.athletes);
     let athletesLoad = JSON.parse(rawdata);
 
-    if (Object.entries(athletesLoad).length === 0 && athletesLoad.constructor === Object) {
+    // ecma7
+    // if (Object.entries(athletesLoad).length === 0 && athletesLoad.constructor === Object) {
+    if (Object.keys(athletesLoad).length === 0 && athletesLoad.constructor === Object) {
         athletes = {};
     }
     
