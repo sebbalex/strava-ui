@@ -10,15 +10,9 @@ https://www.npmjs.com/package/strava-v3
 create a json file named athletes.json where store
 credentials token for user who wants to monitor
 
-##### athletes.json copy from athletes.json-example:
-```{
-  "15953830": {
-    "id": 15953830,
-    "name": "Sebba",
-    "code": "token here"
-  }}
-```
- one object for every user, obj key must be the userid
+##### athletes.json
+Just copy from athletes.json-example, it will auto populate from the application
+itself using OAuth2.0 flow.
 
 ##### .env copy from .env-example:
 ``` 
@@ -27,6 +21,9 @@ export NODE_ENV=development
 export EXPRESS_IP=127.0.0.1
 export EXPRESS_PORT=3000  
 export INSTANCE_NAME=strava-ui 
+export CLIENT_ID=XXXXX
+export CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+export REDIRECT_URI=http://localhost:3000/auth/oauth2
 ```
 others configuration can be seen in config.js
 
@@ -57,10 +54,10 @@ and of course
 * 2  personal info
 * 3  last activity
 * 4  KOM list
+* 5  OAuth 2.0 flow
 
 #### TODO
 *   Order activities by date descending
-*   OAuth must be implemented as well
 *   Tests
 
 ## Bugs
