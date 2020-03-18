@@ -70,7 +70,7 @@ router.get('/oauth2', function (req, res, next) {
         // call model
         setTimeout(() => {
             model.firstRunOrUpdate();
-            res.redirect('/test');
+            res.redirect('/landing/wait');
         }, 2000);
     })
 });

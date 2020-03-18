@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/test', function(req, res, next) {
+router.get('/landing/wait', function(req, res, next) {
     // res.render('test', { title: 'Express' });
     res.sendfile('public/wait.html');
     // res.render('wait', { title: 'Express' });
