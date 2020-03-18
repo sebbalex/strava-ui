@@ -25,7 +25,7 @@ function getData(err, payload, limits, athID, nestObj, resolve, reject) {
         }
     }
     else {
-        console.log(err);
+        console.log(err.message);
         reject(err);
     }
     resolve(athID);
@@ -45,14 +45,15 @@ my.getFromStrava = function (callback) {
     for (var key in athletesLoad) {
         let ath = athletesLoad[key];
 
-        promiseAuth = auth.getToken(ath.code);
+        // promiseAuth = auth.getToken(ath.code);
+        promiseAuth = auth.refreshToken(ath.refresh_code, ath.code);
 
         //precreate athletes obj out with id
         athletes[key] = {};
         let params = { id: ath.id, per_page: maxPerPage, type: actType };
 
         promise = promiseAuth.then((token) => {
-            // console.log("token:", token, ath);
+            console.log("token:", token, ath);
 
             params.access_token = token.access_token;
             return new Promise(function (resolve, reject) {
@@ -76,16 +77,16 @@ my.getFromStrava = function (callback) {
         promises.push(promise);
 
         //
-        promise = promiseAuth.then((token) => {
-            params.access_token = token.access_token;
-            return new Promise(function (resolve, reject) {
-                strava.athletes.listKoms(params,
-                    function (err, payload, limits) {
-                        getData(err, payload, limits, ath.id, 'listkom', resolve, reject)
-                    });
-            });
-        });
-        promises.push(promise);
+        // promise = promiseAuth.then((token) => {
+        //     params.access_token = token.access_token;
+        //     return new Promise(function (resolve, reject) {
+        //         strava.athletes.listKoms(params,
+        //             function (err, payload, limits) {
+        //                 getData(err, payload, limits, ath.id, 'listkom', resolve, reject)
+        //             });
+        //     });
+        // });
+        // promises.push(promise);
 
         promise = promiseAuth.then((token) => {
             params.access_token = token.access_token;

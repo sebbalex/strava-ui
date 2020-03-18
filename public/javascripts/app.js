@@ -12,7 +12,7 @@ function widgetCreate(data) {
     var tu = (distance / 1000) / counter;
     tu = tu.toFixed(0);
     var kmr = 100 - tu;
-    var koms = data.listkom.length;
+    var koms = data.listkom ? data.listkom.length : 0;
     var uphill = data.stats.ytd_ride_totals.elevation_gain;
     var timespent = (data.stats.ytd_ride_totals.elapsed_time / 60 / 60 / 24).toFixed(0);
     var clubs = data.personal.clubs.length;
@@ -354,9 +354,10 @@ function standings(data, chart) {
                 continue;
             }
             var app = '';
-            if (isLength)
-            // console.log(isLength)
-                app = getDescendantProp(data[key], chart.field).length;
+            if (isLength) {
+                console.log(data[key], chart.field)
+                app = getDescendantProp(data[key], chart.field) || null;
+            }
             else if (isMaxInArray)
                 app = getMaxItemInArray(getDescendantProp(data[key], chart.field), chart.arrField);
             else

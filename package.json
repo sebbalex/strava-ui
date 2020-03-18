@@ -5,22 +5,24 @@
   "author": "Alessandro Sebastiani",
   "scripts": {
     "start": ". ./.env && node ./bin/www",
-    "dev": ". ./.env &&  nodemon bin/www -i public",
-    "test": ". ./.env && mocha -t 30000"
+    "dev": ". ./.env &&  nodemon bin/www -i public -i *.json",
+    "test": ". ./.env && mocha -t 30000",
+    "debug": ". ./.env && node --nolazy --inspect-brk=9229 ./bin/www"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.1"
+    "mocha": "^7.1.0",
+    "nodemon": "^2.0.2"
   },
   "dependencies": {
     "compression": "^1.7.4",
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "~1.4.5",
     "debug": "~4.1.1",
     "express": "~4.17.1",
     "http-errors": "~1.7.3",
     "morgan": "~1.9.1",
     "pug": "^2.0.4",
-    "strava-v3": "^1.14.0"
+    "strava-v3": "^2.0.5"
   }
 }

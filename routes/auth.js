@@ -57,7 +57,9 @@ router.get('/oauth2', function (req, res, next) {
         athletes[body.athlete.id] = {
             id: body.athlete.id,
             name: body.athlete.firstname,
-            code: req.query.code
+            code: req.query.code,
+            expires_at: body.expires_at,
+            refresh_code: body.refresh_token
         }
 
         // writing then
