@@ -7,7 +7,7 @@ on web
 https://www.npmjs.com/package/strava-v3
 
 ## Before run
-create a json file named athletes.json where store
+make sure you have a json file named athletes.json where store
 credentials token for user who wants to monitor
 
 ##### athletes.json

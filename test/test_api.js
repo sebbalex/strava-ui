@@ -7,7 +7,7 @@ const should = chai.should();
 // const version = 'v' + config.version.split('.')[0];
 const version = '';
 // const endpoint = '/api/' + version;
-const endpoint = '/athletes';
+const baseEndopoint = '/athletes';
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -16,12 +16,11 @@ const expect = chai.expect;
 describe('GET /athletes', () => {
     it('it should GET atheletes data', (done) => {
         chai.request(app)
-            .get(endpoint)
+            .get(baseEndopoint)
             .end((err, res) => {
                 res.should.have.status(200);
                 expect(res).to.be.json;
                 expect(res.body).to.be.an('Object');
-                expect(res.body).to.not.be.empty;
                 done();
             });
     });
@@ -30,7 +29,7 @@ describe('GET /athletes', () => {
 describe('GET /athletes/stats', () => {
     it('it should GET statistic for saved data file', (done) => {
         chai.request(app)
-            .get(endpoint + '/stats')
+            .get(baseEndopoint + '/stats')
             .end((err, res) => {
                 res.should.have.status(200);
                 expect(res).to.be.json;
@@ -45,7 +44,7 @@ describe('GET /athletes/stats', () => {
 describe('GET /athletes/charts', () => {
     it('it should GET chart json customization rules', (done) => {
         chai.request(app)
-            .get(endpoint + '/charts')
+            .get(baseEndopoint + '/charts')
             .end((err, res) => {
                 res.should.have.status(200);
                 expect(res).to.be.json;
@@ -55,11 +54,11 @@ describe('GET /athletes/charts', () => {
             });
     });
 });
-//
+
 describe('GET /athletes/refresh', () => {
     it('it should refresh and GET stats', (done) => {
         chai.request(app)
-            .get(endpoint + '/refresh')
+            .get(baseEndopoint + '/refresh')
             .end((err, res) => {
                 res.should.have.status(200);
                 expect(res).to.be.json;
