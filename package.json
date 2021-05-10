@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon bin/www -i public -i *.json",
-    "test": "mocha -t 30000",
+    "test": "mocha -t 30000 --exit",
     "debug": "node --nolazy --inspect-brk=9229 ./bin/www"
   },
   "devDependencies": {
