@@ -10,7 +10,7 @@
     "debug": "node --nolazy --inspect-brk=9229 ./bin/www"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
+    "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "mocha": "^9.1.4",
     "nodemon": "^2.0.15"
